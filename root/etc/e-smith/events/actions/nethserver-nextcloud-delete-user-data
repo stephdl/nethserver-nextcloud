@@ -1,0 +1,38 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+EVENT=$1
+USER=$2
+USERGREP=$(su - apache -s /bin/bash -c "source /opt/rh/rh-php71/enable; cd /usr/share/nextcloud/; php occ user:list" | grep "($USER)" | awk '{print $2}'|sed 's/:$//')
+
+PATH=/var/lib/nethserver/nextcloud/$USERGREP
+
+# No data for a user is possible (never logged)
+if ! [[ -d $PATH/files ]]; then
+   echo "WARNING: Unable to find data for user $USERNAME"
+   exit 0
+fi
+
+if [[ -d $PATH/files ]]; then
+    /bin/rm -rf $PATH
+    echo "$PATH is removed for user $USER"
+fi

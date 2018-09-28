@@ -50,3 +50,11 @@ event_actions("nethserver-nextcloud-save", qw(
 event_actions("interface-update", qw(
   nethserver-nextcloud-occ-conf 50
 ));
+
+#
+# user-delete
+#
+
+event_actions("user-delete", qw(
+nethserver-nextcloud-delete-user-data 40
+));
